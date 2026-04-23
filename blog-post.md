@@ -166,6 +166,35 @@ Or list all sessions:
 ./scripts/search-session.sh
 ```
 
+### Browse the session index
+
+When you work locally with a file like `memory-index.md`, you can quickly scan all your sessions — dates, tags, and summaries at a glance. The DynamoDB session index serves the same purpose, but serverless and queryable.
+
+Every time you push a session, the Lambda function writes an index entry to DynamoDB with the session ID, timestamp, tags, status, and a 200-character summary. The List endpoint lets you browse this index the same way you'd scan a local file — but with filtering built in.
+
+```bash
+# List all sessions (equivalent to cat memory-index.md)
+./scripts/search-session.sh
+
+# Filter by status
+./scripts/search-session.sh --status in-progress
+
+# The API returns structured data: session ID, date, tags, and summary
+# Example response:
+# [
+#   {
+#     "session_id": "cdk-migration-03-23-26",
+#     "created_at": "2026-03-23T14:30:00Z",
+#     "status": "in-progress",
+#     "tags": {"topic": "cdk-v2", "type": "development"},
+#     "summary": "Migrated Lambda constructs from CDK v1 to v2. Fixed breaking change: BundlingOptions.image..."
+#   },
+#   ...
+# ]
+```
+
+This gives you the quick-scan capability of a local index file, with the added benefit of filtering by status or date range — and it's accessible from any machine, not just the one where you saved the file.
+
 `[PLACEHOLDER: GIF — Terminal recording showing a realistic workflow: push a session about a debugging task, then in a "new session" search for it and get results back. ~20 seconds.]`
 
 ### Use with your AI coding assistant
