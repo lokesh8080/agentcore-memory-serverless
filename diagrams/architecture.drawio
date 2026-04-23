@@ -1,0 +1,186 @@
+<mxfile host="app.diagrams.net" modified="2026-03-25T22:55:00.000Z" agent="draw.io" version="24.0.0" type="device">
+  <diagram id="agentcore-memory-arch" name="Architecture">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Background groups -->
+        <!-- Client Group -->
+        <mxCell id="client_group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F2F3F3;strokeColor=#545B64;strokeWidth=2;dashed=0;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="200" width="220" height="340" as="geometry"/>
+        </mxCell>
+        <mxCell id="client_label" value="&lt;b&gt;AI Coding Assistant&lt;/b&gt;&lt;br&gt;(Kiro CLI / Any CLI)" style="text;html=1;align=center;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=13;fontColor=#232F3E;" vertex="1" parent="1">
+          <mxGeometry x="60" y="210" width="180" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- API Gateway Group -->
+        <mxCell id="apigw_group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E7157B;fillOpacity=10;strokeColor=#E7157B;strokeWidth=2;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="360" y="280" width="160" height="180" as="geometry"/>
+        </mxCell>
+
+        <!-- Lambda Group -->
+        <mxCell id="lambda_group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ED7100;fillOpacity=10;strokeColor=#ED7100;strokeWidth=2;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="620" y="200" width="180" height="340" as="geometry"/>
+        </mxCell>
+
+        <!-- AgentCore Memory Group -->
+        <mxCell id="memory_group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7B68EE;fillOpacity=10;strokeColor=#7B68EE;strokeWidth=2;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="920" y="80" width="280" height="280" as="geometry"/>
+        </mxCell>
+        <mxCell id="memory_label" value="&lt;b&gt;Amazon Bedrock&lt;br&gt;AgentCore Memory&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=13;fontColor=#7B68EE;" vertex="1" parent="1">
+          <mxGeometry x="970" y="90" width="160" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- DynamoDB Group -->
+        <mxCell id="ddb_group" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3B48CC;fillOpacity=10;strokeColor=#3B48CC;strokeWidth=2;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="920" y="420" width="280" height="220" as="geometry"/>
+        </mxCell>
+        <mxCell id="ddb_label" value="&lt;b&gt;Amazon DynamoDB&lt;/b&gt;&lt;br&gt;Session Index" style="text;html=1;align=center;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=13;fontColor=#3B48CC;" vertex="1" parent="1">
+          <mxGeometry x="980" y="430" width="150" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- === ICONS === -->
+
+        <!-- push-session.sh -->
+        <mxCell id="push_script" value="&lt;b&gt;push-session.sh&lt;/b&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3E;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cli;" vertex="1" parent="1">
+          <mxGeometry x="110" y="280" width="48" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- search-session.sh -->
+        <mxCell id="search_script" value="&lt;b&gt;search-session.sh&lt;/b&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3E;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cli;" vertex="1" parent="1">
+          <mxGeometry x="110" y="420" width="48" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- API Gateway -->
+        <mxCell id="apigw" value="&lt;b&gt;Amazon API&lt;br&gt;Gateway&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;HTTP API + IAM Auth&lt;/font&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.api_gateway;" vertex="1" parent="1">
+          <mxGeometry x="416" y="340" width="48" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- Push Lambda -->
+        <mxCell id="push_fn" value="&lt;b&gt;Push&lt;br&gt;Function&lt;/b&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#ED7100;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;" vertex="1" parent="1">
+          <mxGeometry x="686" y="230" width="48" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- Search Lambda -->
+        <mxCell id="search_fn" value="&lt;b&gt;Search&lt;br&gt;Function&lt;/b&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#ED7100;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;" vertex="1" parent="1">
+          <mxGeometry x="686" y="360" width="48" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- List Lambda -->
+        <mxCell id="list_fn" value="&lt;b&gt;List&lt;br&gt;Function&lt;/b&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#ED7100;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;" vertex="1" parent="1">
+          <mxGeometry x="686" y="470" width="48" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- Lambda Group Label -->
+        <mxCell id="lambda_label" value="&lt;b&gt;AWS Lambda&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=13;fontColor=#ED7100;" vertex="1" parent="1">
+          <mxGeometry x="660" y="210" width="110" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Semantic Facts Strategy -->
+        <mxCell id="semantic" value="&lt;b&gt;🔍 semantic_facts&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Extracts decisions, findings,&lt;br&gt;commands as individual&lt;br&gt;searchable facts&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0FF;strokeColor=#7B68EE;strokeWidth=1;fontSize=11;fontColor=#232F3E;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="940" y="140" width="240" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Session Summaries Strategy -->
+        <mxCell id="summaries" value="&lt;b&gt;📝 session_summaries&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Generates condensed&lt;br&gt;session overviews&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8E0FF;strokeColor=#7B68EE;strokeWidth=1;fontSize=11;fontColor=#232F3E;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="940" y="240" width="240" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Async note -->
+        <mxCell id="async_note" value="&lt;font style=&quot;font-size:10px&quot;&gt;⏳ Async extraction&lt;br&gt;after CreateEvent (~30s)&lt;/font&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=14;fillColor=#FFF4E0;strokeColor=#FF9900;fontSize=10;fontColor=#856404;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="320" width="140" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- DynamoDB Table -->
+        <mxCell id="ddb_table" value="&lt;b&gt;Sessions Table&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;PK: actorId&lt;br&gt;SK: sessionId&lt;/font&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3B48CC;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.dynamodb;" vertex="1" parent="1">
+          <mxGeometry x="970" y="490" width="48" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- GSI + TTL -->
+        <mxCell id="ddb_gsi" value="&lt;font style=&quot;font-size:10px&quot;&gt;&lt;b&gt;GSI:&lt;/b&gt; status + createdAt&lt;br&gt;&lt;b&gt;TTL:&lt;/b&gt; auto-expiry&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0E4FF;strokeColor=#3B48CC;strokeWidth=1;fontSize=10;fontColor=#232F3E;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="490" width="120" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- === ARROWS === -->
+
+        <!-- push_script → API GW -->
+        <mxCell id="arrow1" value="POST /sessions" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;strokeColor=#FF9900;strokeWidth=2;fontSize=10;fontColor=#FF9900;labelBackgroundColor=#FFFFFF;" edge="1" source="push_script" target="apigw" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- search_script → API GW -->
+        <mxCell id="arrow2" value="POST /sessions/search" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeColor=#FF9900;strokeWidth=2;fontSize=10;fontColor=#FF9900;labelBackgroundColor=#FFFFFF;" edge="1" source="search_script" target="apigw" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- API GW → Push Lambda -->
+        <mxCell id="arrow3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#232F3E;strokeWidth=1.5;" edge="1" source="apigw" target="push_fn" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- API GW → Search Lambda -->
+        <mxCell id="arrow4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#232F3E;strokeWidth=1.5;" edge="1" source="apigw" target="search_fn" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- API GW → List Lambda -->
+        <mxCell id="arrow5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#232F3E;strokeWidth=1.5;" edge="1" source="apigw" target="list_fn" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Push Lambda → AgentCore Memory -->
+        <mxCell id="arrow6" value="CreateEvent API" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#7B68EE;strokeWidth=2;fontSize=10;fontColor=#7B68EE;labelBackgroundColor=#FFFFFF;" edge="1" source="push_fn" target="semantic" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Push Lambda → DynamoDB -->
+        <mxCell id="arrow7" value="PutItem" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#3B48CC;strokeWidth=2;fontSize=10;fontColor=#3B48CC;labelBackgroundColor=#FFFFFF;" edge="1" source="push_fn" target="ddb_table" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="860" y="254"/>
+              <mxPoint x="860" y="514"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Search Lambda → DynamoDB -->
+        <mxCell id="arrow8" value="① Query (fast lookup)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#3B48CC;strokeWidth=2;fontSize=10;fontColor=#3B48CC;labelBackgroundColor=#FFFFFF;" edge="1" source="search_fn" target="ddb_table" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="384"/>
+              <mxPoint x="880" y="514"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Search Lambda → AgentCore Memory -->
+        <mxCell id="arrow9" value="② RetrieveMemoryRecords&lt;br&gt;(semantic search)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#7B68EE;strokeWidth=2;fontSize=10;fontColor=#7B68EE;labelBackgroundColor=#FFFFFF;" edge="1" source="search_fn" target="summaries" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- List Lambda → DynamoDB -->
+        <mxCell id="arrow10" value="Query (list all)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeColor=#3B48CC;strokeWidth=2;fontSize=10;fontColor=#3B48CC;labelBackgroundColor=#FFFFFF;" edge="1" source="list_fn" target="ddb_table" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="900" y="494"/>
+              <mxPoint x="900" y="550"/>
+              <mxPoint x="970" y="550"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Namespace note -->
+        <mxCell id="ns_note" value="&lt;font style=&quot;font-size:10px&quot;&gt;&lt;b&gt;Namespace isolation:&lt;/b&gt;&lt;br&gt;work/{actorId}&lt;/font&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=14;fillColor=#FFF4E0;strokeColor=#FF9900;fontSize=10;fontColor=#856404;align=center;" vertex="1" parent="1">
+          <mxGeometry x="940" y="320" width="100" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Title -->
+        <mxCell id="title" value="&lt;font style=&quot;font-size:18px&quot;&gt;&lt;b&gt;Serverless AI Session Memory Architecture&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#232F3E;" vertex="1" parent="1">
+          <mxGeometry x="400" y="30" width="400" height="40" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

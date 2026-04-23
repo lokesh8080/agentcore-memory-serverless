@@ -1,0 +1,209 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Serverless session memory for AI coding assistants using Amazon Bedrock AgentCore Memory.
+  Provides API endpoints to push and search session context, with a DynamoDB index for fast lookups.
+
+Parameters:
+  MemoryName:
+    Type: String
+    Default: ai_session_memory
+    Description: Name for the AgentCore Memory resource
+  ActorId:
+    Type: String
+    Description: Your user alias or identifier (used as the actor ID in AgentCore Memory)
+  Namespace:
+    Type: String
+    Default: sessions
+    Description: Namespace prefix for memory records (e.g. "sessions", "team-name")
+  EventExpiryDays:
+    Type: Number
+    Default: 365
+    Description: Days before memory events expire
+
+Globals:
+  Function:
+    Runtime: python3.13
+    Timeout: 30
+    MemorySize: 256
+    Architectures:
+      - arm64
+    Environment:
+      Variables:
+        MEMORY_TABLE: !Ref SessionIndexTable
+        ACTOR_ID: !Ref ActorId
+        NAMESPACE: !Ref Namespace
+
+Resources:
+
+  # --- AgentCore Memory ---
+  AgentCoreMemory:
+    Type: AWS::Bedrock::Memory
+    Properties:
+      Name: !Ref MemoryName
+      Description: Persistent memory for AI coding assistant sessions
+      EventExpiryDuration: !Ref EventExpiryDays
+      MemoryStrategies:
+        - Name: semantic_facts
+          Description: Extract key facts and decisions from conversations
+          Type: SEMANTIC
+          Namespaces:
+            - !Sub "${Namespace}/{actorId}"
+        - Name: session_summaries
+          Description: Summarize each session for quick recall
+          Type: SUMMARIZATION
+          Namespaces:
+            - !Sub "summaries/{actorId}/{sessionId}"
+
+  # --- DynamoDB Session Index (replaces local memory-index.md) ---
+  SessionIndexTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: !Sub "${MemoryName}-session-index"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: actor_id
+          AttributeType: S
+        - AttributeName: session_id
+          AttributeType: S
+        - AttributeName: created_at
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+      KeySchema:
+        - AttributeName: actor_id
+          KeyType: HASH
+        - AttributeName: session_id
+          KeyType: RANGE
+      LocalSecondaryIndexes:
+        - IndexName: by-date
+          KeySchema:
+            - AttributeName: actor_id
+              KeyType: HASH
+            - AttributeName: created_at
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      GlobalSecondaryIndexes:
+        - IndexName: by-status
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: created_at
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+
+  # --- API Gateway ---
+  MemoryApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: prod
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowMethods:
+          - POST
+          - GET
+        AllowHeaders:
+          - Content-Type
+      Auth:
+        DefaultAuthorizer: AWS_IAM
+
+  # --- Push Session Lambda ---
+  PushSessionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${MemoryName}-push-session"
+      CodeUri: functions/push_session/
+      Handler: app.handler
+      Description: Push a session summary to AgentCore Memory and index it in DynamoDB
+      Environment:
+        Variables:
+          MEMORY_ID: !GetAtt AgentCoreMemory.MemoryId
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref SessionIndexTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock-agentcore:CreateEvent
+              Resource: !Sub "arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:memory/${AgentCoreMemory.MemoryId}"
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref MemoryApi
+            Path: /sessions
+            Method: POST
+
+  # --- Search Sessions Lambda ---
+  SearchSessionsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${MemoryName}-search-sessions"
+      CodeUri: functions/search_sessions/
+      Handler: app.handler
+      Description: Search sessions via DynamoDB index and AgentCore Memory semantic search
+      Environment:
+        Variables:
+          MEMORY_ID: !GetAtt AgentCoreMemory.MemoryId
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref SessionIndexTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock-agentcore:RetrieveMemoryRecords
+              Resource: !Sub "arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:memory/${AgentCoreMemory.MemoryId}"
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref MemoryApi
+            Path: /sessions/search
+            Method: POST
+
+  # --- List Sessions Lambda ---
+  ListSessionsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${MemoryName}-list-sessions"
+      CodeUri: functions/list_sessions/
+      Handler: app.handler
+      Description: List all sessions from the DynamoDB index (replaces reading memory-index.md)
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref SessionIndexTable
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref MemoryApi
+            Path: /sessions
+            Method: GET
+
+Outputs:
+  ApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${MemoryApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
+  MemoryId:
+    Description: AgentCore Memory resource ID
+    Value: !GetAtt AgentCoreMemory.MemoryId
+  SessionIndexTable:
+    Description: DynamoDB table for session index
+    Value: !Ref SessionIndexTable
+  PushEndpoint:
+    Description: POST session content
+    Value: !Sub "https://${MemoryApi}.execute-api.${AWS::Region}.amazonaws.com/prod/sessions"
+  SearchEndpoint:
+    Description: Search sessions
+    Value: !Sub "https://${MemoryApi}.execute-api.${AWS::Region}.amazonaws.com/prod/sessions/search"
+  ListEndpoint:
+    Description: List all sessions
+    Value: !Sub "https://${MemoryApi}.execute-api.${AWS::Region}.amazonaws.com/prod/sessions"

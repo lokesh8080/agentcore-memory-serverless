@@ -1,0 +1,77 @@
+@startuml agentcore-memory-architecture
+!theme aws-orange
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Amazon Ember, Arial, sans-serif"
+skinparam defaultFontSize 12
+skinparam rectangleBorderColor #232F3E
+skinparam rectangleBackgroundColor #FFFFFF
+skinparam componentBorderColor #232F3E
+skinparam arrowColor #232F3E
+skinparam noteBorderColor #FF9900
+skinparam noteBackgroundColor #FFF4E0
+
+title Serverless AI Session Memory Architecture
+
+' ---- Left side: Client ----
+rectangle "**AI Coding Assistant\n(Kiro CLI / Any CLI)**" as cli #F2F3F4 {
+  component "push-session.sh" as push_script
+  component "search-session.sh" as search_script
+}
+
+' ---- Middle: API Layer ----
+rectangle "**Amazon API Gateway**\n(HTTP API + IAM Auth)" as apigw #E7157B
+
+' ---- Lambda Functions ----
+rectangle "**AWS Lambda**" as lambda_box #ED7100 {
+  component "Push\nFunction" as push_fn
+  component "Search\nFunction" as search_fn
+  component "List\nFunction" as list_fn
+}
+
+' ---- Storage Layer ----
+rectangle "**Amazon Bedrock\nAgentCore Memory**" as memory_box #7B68EE {
+  component "semantic_facts\nstrategy" as semantic <<Extracts decisions,\nfindings, commands>>
+  component "session_summaries\nstrategy" as summaries <<Generates condensed\nsession overviews>>
+}
+
+database "**Amazon DynamoDB**\n(Session Index)" as ddb #4053D6 {
+  component "GSI: status-date" as gsi
+  component "TTL: auto-expiry" as ttl
+}
+
+' ---- Flows ----
+push_script -[#FF9900]-> apigw : POST /sessions
+search_script -[#FF9900]-> apigw : POST /sessions/search
+
+apigw -[#232F3E]-> push_fn
+apigw -[#232F3E]-> search_fn
+apigw -[#232F3E]-> list_fn
+
+push_fn -[#7B68EE]-> memory_box : CreateEvent API\n(session content +\nmetadata tags)
+push_fn -[#4053D6]-> ddb : PutItem\n(session index entry)
+
+search_fn -[#4053D6]-> ddb : Query\n(fast structured\nlookup by status/date)
+search_fn -[#7B68EE]-> memory_box : RetrieveMemoryRecords\n(semantic search)
+
+list_fn -[#4053D6]-> ddb : Query\n(list all sessions)
+
+' ---- Notes ----
+note right of memory_box
+  **Async Processing:**
+  After CreateEvent, AgentCore
+  automatically runs both strategies:
+  1. Extracts individual facts
+  2. Generates session summary
+  
+  **Namespace isolation:**
+  work/{actorId}
+end note
+
+note bottom of ddb
+  **Partition Key:** actorId
+  **Sort Key:** sessionId
+  **GSI:** status + createdAt
+  **TTL:** configurable expiry
+end note
+
+@enduml
